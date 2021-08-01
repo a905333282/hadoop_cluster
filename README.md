@@ -11,3 +11,14 @@
 |spark|3.0.0|配置hive on spark, 在hdfs上配置build without hadoop版，在单节点上配置build with hadoop版，主要提供jar包的库|[下载(build with hadoop)](https://drive.google.com/file/d/1Q3W4NG332qyvmZQeIQ_oyZdrlnHx8nLn/view?usp=sharing)<br> [下载(build without hadoop)](https://drive.google.com/file/d/1rvdVzuSaQvJVinAgokc-RX2uMpEYWZvR/view?usp=sharing)|
 |kafka|2.4.1||[下载](https://drive.google.com/file/d/1isVqJ0j3OtAs2MeZsk6g0lQBElteBZr4/view?usp=sharing)|
 |zookeeper|3.5.7|kafka依赖zookeeper，每次一定要先于kafka启动，晚于kafka关闭|[下载](https://drive.google.com/file/d/1wFcXjod5o_-lXXfYWXEwVylVYEIRWolf/view?usp=sharing)|
+
+## 2. 服务器环境搭建
+### 2.1 网络配置
+1. 配置静态ip地址，HDFS需要依据配置文件中的ip地址进行通信，ip如发生改变，需更改配置文件，所以要设置静态ip地址
+2. 改变host名字，即ip对应的主机名如：192.168.12.12 -> hadoop01
+3. 配置所有主机间ssh免密登录
+
+完成网络配置后，效果应是: ssh username@hostname 可以由任何主机直接免密登录任何主机
+
+### 2.2 Hadoop集群配置
+#### 2.2.1 构建集群文件分发脚本
