@@ -51,5 +51,51 @@ use ali_inc;
 ```
 select * from ali_hall_complaint;
 ```
+得到下列模拟数据<br>
 ![image](https://user-images.githubusercontent.com/44830402/128549167-275c5956-2751-4fd5-8e5d-215ea19c03d7.png)
+退出MySQL<br>
+```
+exit;
+```
+进入脚本文件夹<br>
+```
+cd ~/bin
+```
+运行迁移脚本，封装了sqoop，但不够智能化，在**Version 1.1** 中将改进. 脚本后面的日期是要迁移的数据的日期。
+```
+transfer_mysql_hdfs.sh 2021-08-08
+```
+完成后, 查看HDFS上的文件，选择了投诉日期在2021-08-08的字段<br>
+```
+hadoop fs -cat /source_data/hall/ali_hall_complaint/2021-08-08/part-m-00000
+```
+![image](https://user-images.githubusercontent.com/44830402/128550639-94eefa5b-0cc3-46ec-bc70-51aeec3e189e.png)
+下面在hive建表，建表的脚本在 ~/bin/hivesql中
+```
+hive -f ~/bin/hivesql/create_ali_hall_complaint.sql
+```
+运行完成后，查看表结构
+```
+hive -e "desc ali_inc.ali_hall_complaint;"
+```
+运行加载HDFS数据到Hive脚本
+```
+~/bin/hivesql/load_ali_hall_complaint.sh
+```
+查看hive中的数据
+```
+hive -e "select * from ali_inc.ali_hall_complaint;"
+```
+![image](https://user-images.githubusercontent.com/44830402/128551829-8fe213f7-caa6-416f-a374-653d9d5ee42f.png)
+至此，数据从单机的mysql分别转移到了
+1. 以textfile的形式存储在HDFS
+2. 以Hive表的形式存储在基于HDFS的Hive
 
+计算框架测试，本项目已将Hive的计算引擎由MapReduce更换为Spark, 在命令行输入Hive, 启动Hive客户端
+```
+SELECT count(*) FROM ali_inc.ali_hall_complaint GROUP BY room_num;
+```
+计算每户人家的投诉数量<br>
+在控制台输出:
+![image](https://user-images.githubusercontent.com/44830402/128552828-2d3a1616-4ede-42d8-8610-82aef1032313.png)
+则证明Spark已经完成计算。
