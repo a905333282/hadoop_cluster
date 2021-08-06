@@ -1,4 +1,13 @@
-# 数据中台搭建
+# 数据仓库搭建
+**Version 1.0**：<br>
+1. 完成了 mysql->hdfs->hive->spark 架构设计，搭建好了实验环境。
+2. 以 *艾黎物业项目部范式表格2021.4.1\艾黎物业项目部表格\大厅客服使用\投诉接待与处理登记表* 为例，完成了架构验证。
+3. 完成部分自动化脚本
+
+**Version 1.1目标** <br>
+1. 搭建数据模拟器，模拟所有表的数据。
+2. 基于业务讨论数据的分层，分表问题。
+3. 完成更多的自动化脚本。
 
 ## 1. 框架版本选择
 
@@ -9,16 +18,38 @@
 |hadoop|3.1.3|需配置hdfs集群，做存储用|[下载](https://drive.google.com/file/d/1WAcF_Vy26GgC1Fdw1R1nLquYFMReszsz/view?usp=sharing)|
 |hive|3.1.2|在hdfs上做分析用，在一个节点配置即可|[下载](https://drive.google.com/file/d/1jNhC-qrCwT39enyDqvgDnmXhOt7rRO_F/view?usp=sharing)|
 |spark|3.0.0|配置hive on spark, 在hdfs上配置build without hadoop版，在单节点上配置build with hadoop版，主要提供jar包的库|[下载(build with hadoop)](https://drive.google.com/file/d/1Q3W4NG332qyvmZQeIQ_oyZdrlnHx8nLn/view?usp=sharing)<br> [下载(build without hadoop)](https://drive.google.com/file/d/1rvdVzuSaQvJVinAgokc-RX2uMpEYWZvR/view?usp=sharing)|
-|kafka|2.4.1||[下载](https://drive.google.com/file/d/1isVqJ0j3OtAs2MeZsk6g0lQBElteBZr4/view?usp=sharing)|
-|zookeeper|3.5.7|kafka依赖zookeeper，每次一定要先于kafka启动，晚于kafka关闭|[下载](https://drive.google.com/file/d/1wFcXjod5o_-lXXfYWXEwVylVYEIRWolf/view?usp=sharing)|
+|kafka|2.4.1|暂未涉及|[下载](https://drive.google.com/file/d/1isVqJ0j3OtAs2MeZsk6g0lQBElteBZr4/view?usp=sharing)|
+|zookeeper|3.5.7|暂未涉及 kafka依赖zookeeper，每次一定要先于kafka启动，晚于kafka关闭|[下载](https://drive.google.com/file/d/1wFcXjod5o_-lXXfYWXEwVylVYEIRWolf/view?usp=sharing)|
 
 ## 2. 服务器环境搭建
 ### 2.1 网络配置
-1. 配置静态ip地址，HDFS需要依据配置文件中的ip地址进行通信，ip如发生改变，需更改配置文件，所以要设置静态ip地址
-2. 改变host名字，即ip对应的主机名如：192.168.12.12 -> hadoop01
-3. 配置所有主机间ssh免密登录
+1. 改变host名字，即ip对应的主机名如：192.168.12.12 -> hadoop01
+2. 配置所有主机间ssh免密登录
 
 完成网络配置后，效果应是: ssh username@hostname 可以由任何主机直接免密登录任何主机
 
 ### 2.2 Hadoop集群配置
-#### 2.2.1 构建集群文件分发脚本
+#### 2.2.1 集群服务概况
+
+|ip地址|hostname|username|password|root|password|集群中角色|
+|:-------|---|-------|--|----|--|--|
+|172.31.0.241| hadoop01|hadoop|000000|root|Hadoop.|NameNode<br>DataNode<br>JobHistoryServer|
+|172.31.0.39|  hadoop02|hadoop|000000|root|Hadoop.|ResourceManager<br>DataNode|
+|172.31.0.54|  hadoop03|hadoop|000000|root|Hadoop.|secondartNameNode<br>DataNode|
+
+#### 2.2.2 集群架构（暂定，只包括了mysql->hdfs部分）
+![image](https://user-images.githubusercontent.com/44830402/128547756-b8529df6-68b3-48f1-b01c-99e40dc8eff7.png)
+
+#### 2.2.2 集群架构验证实验
+在 hadoop01 控制台
+```
+mysql -u root -p000000
+```
+```
+use ali_inc;
+```
+```
+select * from ali_hall_complaint;
+```
+![image](https://user-images.githubusercontent.com/44830402/128549167-275c5956-2751-4fd5-8e5d-215ea19c03d7.png)
+
