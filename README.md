@@ -37,7 +37,7 @@
 |172.31.0.39|  hadoop02|hadoop|000000|root|Hadoop.|ResourceManager<br>DataNode|
 |172.31.0.54|  hadoop03|hadoop|000000|root|Hadoop.|secondartNameNode<br>DataNode|
 
-#### 2.2.2 集群架构（暂定，只包括了mysql->hdfs部分）
+#### 2.2.2 集群架构（暂定，只包括了mysql->hdfs->Hive->Spark部分）
 ![image](https://user-images.githubusercontent.com/44830402/128547756-b8529df6-68b3-48f1-b01c-99e40dc8eff7.png)
 
 #### 2.2.2 集群架构验证实验
