@@ -1,5 +1,5 @@
 #! /bin/bash
- 
+  
 #大厅客服使用-投诉接待与处理登记表 Mysql -> HDFS
 echo [INFO]: Mysql -> HDFS: 大厅客服使用-投诉接待与处理登记表
 /opt/module/sqoop/bin/sqoop import \
