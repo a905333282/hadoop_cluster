@@ -1,7 +1,8 @@
 # 数据仓库搭建
-**Version 1.0**：<br>
-1. 完成了 mysql->hdfs->hive->spark->mysql->BI工具->快速查询 架构设计，搭建好了实验环境。
-2. 以下列表为例，完成了架构验证。现在因为表比较少，所以没有很细致的分层，直接从ODS层到应用层，中间没有如宽表层等中间层。
+**Version 1.1**：<br>
+<br>
+**1. 完成了 mysql->hdfs->hive->spark->mysql->BI工具->快速查询 架构设计，搭建好了实验环境。**
+**2. 以下列表为例，完成了架构验证。现在因为表比较少，所以没有很细致的分层，直接从ODS层到应用层，中间没有如宽表层等中间层。**
 
 |表名MySQL|表名Hive(ODS层，即元数据层)|备注|
 |:-------|---|---|
@@ -13,8 +14,14 @@
 | ali_hall_complaint_review      |ods_hall_complaint_review|大厅客服使用——投诉接待与处理登记表|
 | ali_hall_maintain_mission      |ods_hall_maintain_mission|大厅客服使用——物业公司维修派工单|
 
-以ali_hall_complaint为例，在业务数据库中
-3. 完成更多自动化脚本
+<br>以ali_hall_complaint为例，
+1. 在业务数据库中通过自动化脚本加载到hdfs，
+2. 再通过自动化脚本加载到hive，
+3. 在Hive中数据通过自动化脚本调度Spark进行计算，在本例中计算了一个月内投诉次数排行榜。
+4. 计算结果再次被自动化脚本投入了结果数据库中，通过BI工具呈现<br>
+
+**3. 完成更多自动化脚本<br>**
+
 ![离线_架构](https://user-images.githubusercontent.com/44830402/130888919-4587611c-30d7-4394-b7b3-e3e148bce541.jpg)
 
 
