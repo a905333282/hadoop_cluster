@@ -19,8 +19,6 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_advance/';
 
 
-
-
 CREATE TABLE ods_fee_billchangerecord (
   `id` string COMMENT '主键###_1',
   `billingreceivablesId` string COMMENT '应收ID###_2',
@@ -42,7 +40,6 @@ PARTITIONED BY (`dt` string)
 row format delimited fields terminated by '\t' 
 STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_billchangerecord/';
-
 
 
 CREATE TABLE ods_fee_billingreceivables(
@@ -99,7 +96,6 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_billingreceivables/';
 
 
-
 CREATE TABLE ods_fee_cunadvance (
   `id` string COMMENT '主键###_1',
   `skdId` string COMMENT '收款单ID###_2',
@@ -119,8 +115,6 @@ PARTITIONED BY (`dt` string)
 row format delimited fields terminated by '\t' 
 STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_cunadvance/';
-
-
 
 
 CREATE TABLE ods_fee_openbilling (
@@ -163,7 +157,6 @@ PARTITIONED BY (`dt` string)
 row format delimited fields terminated by '\t' 
 STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_openbilling/';
-
 
 
 CREATE TABLE ods_fee_propertysubjects (
