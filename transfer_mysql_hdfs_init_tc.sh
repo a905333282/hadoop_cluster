@@ -1,11 +1,17 @@
 #! /bin/bash
-  
+
+if [ -n "$2" ] ;then
+        do_date=$2
+else
+        do_date=`date -d '-1 day' +%F`
+fi
+
 import_data(){
 /opt/module/sqoop/bin/sqoop import \
         --connect jdbc:mysql://hadoop01:3306/aili_prod_img \
         --username root \
         --password qkVChW:{8]_=L!7 \
-        --target-dir /origin_data/origin_aili_prod_img/db/$1/ \
+        --target-dir /origin_data/origin_aili_prod_img/db/$1/$do_date \
         --delete-target-dir \
         --query "$2 and  \$CONDITIONS" \
         --num-mappers 1 \
@@ -17,16 +23,16 @@ import_data(){
 
 
 import_tc_billingreceivables(){
-	import_data tc_billingreceivables "SELECT * FROM aili_prod_img.tc_billingreceivables WHERE 1=1"
+	import_data tc_billingreceivables "SELECT * FROM aili_prod_img.tc_billingreceivables WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 
 import_tc_openbilling(){
-        import_data tc_openbilling "SELECT * FROM aili_prod_img.tc_openbilling WHERE 1=1"
+        import_data tc_openbilling "SELECT * FROM aili_prod_img.tc_openbilling WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_tc_monthcard(){
-	import_data tc_monthcard "SELECT * FROM aili_prod_img.tc_monthcard WHERE 1=1"	
+	import_data tc_monthcard "SELECT * FROM aili_prod_img.tc_monthcard WHERE DATEDIFF('$do_date',updateTime)>0"	
 }
 
 import_tc_monthcard_car(){
@@ -42,7 +48,7 @@ import_tc_openbilling_paymentmethod(){
 }
 
 import_tc_operationrecord(){
-        import_data tc_operationrecord "SELECT * FROM aili_prod_img.tc_operationrecord WHERE 1=1"
+        import_data tc_operationrecord "SELECT * FROM aili_prod_img.tc_operationrecord WHERE DATEDIFF('$do_date',operationTime)>0"
 }
 
 

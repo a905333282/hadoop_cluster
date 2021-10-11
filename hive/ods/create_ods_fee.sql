@@ -1,3 +1,6 @@
+
+USE aili_prod_img;
+DROP TABLE IF EXISTS ods_fee_advance;
 CREATE TABLE ods_fee_advance (
   `id` string COMMENT '主键###_1',
   `hid` string COMMENT '楼盘ID###_2',
@@ -18,7 +21,7 @@ row format delimited fields terminated by '\t'
 STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_advance/';
 
-
+DROP TABLE IF EXISTS ods_fee_billchangerecord;
 CREATE TABLE ods_fee_billchangerecord (
   `id` string COMMENT '主键###_1',
   `billingreceivablesId` string COMMENT '应收ID###_2',
@@ -41,7 +44,7 @@ row format delimited fields terminated by '\t'
 STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_billchangerecord/';
 
-
+DROP TABLE IF EXISTS ods_fee_billingreceivables;
 CREATE TABLE ods_fee_billingreceivables(
   `id` string COMMENT '主键###_1',
   `hid` string COMMENT '项目ID###_2',
@@ -96,6 +99,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_billingreceivables/';
 
 
+DROP TABLE IF EXISTS ods_fee_cunadvance;
 CREATE TABLE ods_fee_cunadvance (
   `id` string COMMENT '主键###_1',
   `skdId` string COMMENT '收款单ID###_2',
@@ -117,6 +121,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_cunadvance/';
 
 
+DROP TABLE IF EXISTS ods_fee_openbilling;
 CREATE TABLE ods_fee_openbilling (
   `id` string COMMENT '主键###_1',
   `hid` string COMMENT '项目ID###_2',
@@ -159,6 +164,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_openbilling/';
 
 
+DROP TABLE IF EXISTS ods_fee_propertysubjects;
 CREATE TABLE ods_fee_propertysubjects (
   `id` string COMMENT '主键###_1',
   `subjectType` tinyint COMMENT '收费标准类型：1.周期性 2非周期性###_2',
@@ -194,6 +200,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_propertysubjects/';
 
 
+DROP TABLE IF EXISTS ods_fee_quadvance;
 CREATE TABLE ods_fee_quadvance (
   `id` string COMMENT '主键###_1',
   `sfkdId` string COMMENT '收付款单ID###_2',
@@ -215,6 +222,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_fee_quadvance/';
 
 
+DROP TABLE IF EXISTS ods_fee_skd;
 CREATE TABLE ods_fee_skd (
   `id` string COMMENT '主键：存收款单号###_1',
   `hid` string COMMENT '项目id###_2',

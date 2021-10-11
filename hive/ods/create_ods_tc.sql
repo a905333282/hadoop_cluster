@@ -1,3 +1,5 @@
+USE aili_prod_img;
+DROP TABLE IF EXISTS ods_tc_billingreceivables;
 CREATE TABLE ods_tc_billingreceivables (
   `id` string COMMENT '主键###_1',
   `houseId` string COMMENT '项目ID###_2',
@@ -38,6 +40,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_tc_billingreceivables/';
 
 
+DROP TABLE IF EXISTS ods_tc_openbilling;
 CREATE TABLE ods_tc_openbilling (
   `id` string COMMENT '主键###_1',
   `houseId` string COMMENT '项目ID###_2',
@@ -93,6 +96,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_tc_openbilling/';
 
 
+DROP TABLE IF EXISTS ods_tc_monthcard;
 CREATE TABLE ods_tc_monthcard (
   `id` string COMMENT '主键###_1',
   `yardId` string COMMENT 'pws下车场ID###_2',
@@ -136,6 +140,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_tc_monthcard/';
 
 
+DROP TABLE IF EXISTS ods_tc_monthcard_car;
 CREATE TABLE ods_tc_monthcard_car (
   `id` string COMMENT '主键###_1',
   `monthCardId` string COMMENT '月卡id###_2',
@@ -155,6 +160,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_tc_monthcard_car/';
 
 
+DROP TABLE IF EXISTS ods_tc_monthcardtype;
 CREATE TABLE ods_tc_monthcardtype (
   `id` string COMMENT '主键###_1',
   `yardId` string COMMENT 'pws下车场ID###_2',
@@ -176,6 +182,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_tc_monthcardtype/';
 
 
+DROP TABLE IF EXISTS ods_tc_openbilling_paymentmethod;
 CREATE TABLE ods_tc_openbilling_paymentmethod (
   `id` string COMMENT '主键###_1',
   `openbillingId` string COMMENT '实收id主键###_2',
@@ -190,6 +197,7 @@ STORED AS TEXTFILE
 location '/warehouse/aili_prod_img/ods/ods_tc_openbilling_paymentmethod/';
 
 
+DROP TABLE IF EXISTS ods_tc_operationrecord;
 CREATE TABLE ods_tc_operationrecord (
   `id` string COMMENT '主键###_1',
   `monthCardId` string COMMENT '月卡id###_2',

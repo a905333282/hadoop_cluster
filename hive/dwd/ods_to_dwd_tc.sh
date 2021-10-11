@@ -1,3 +1,14 @@
+hive=/opt/module/hive/bin/hive
+
+if [ -n "$1" ] ;then
+        do_date=$1
+else
+        do_date=`date -d '-1 day' +%F`
+fi
+
+selectdb="USE aili_prod_img;"
+
+sqlquery="insert overwrite table dwd_tc_billing partition(dt='$do_date')
 SELECT
     ods_tc_openbilling.houseId,
     ods_tc_openbilling.platform,
@@ -18,7 +29,6 @@ SELECT
     ods_tc_openbilling.amountReceivable,
     ods_tc_openbilling.amountReal,
     ods_tc_openbilling.yardId,
-    ods_tc_openbilling.skdNo,
     ods_tc_openbilling.userName,
     ods_tc_openbilling.collectionTime,
     ods_tc_openbilling.carNo,
@@ -34,4 +44,7 @@ from ods_tc_openbilling
                     FROM
                         ods_tc_monthcard
                             LEFT JOIN ods_tc_monthcard_car on ods_tc_monthcard.id=ods_tc_monthcard_car.monthCardId) AS tcm on tcm.id=ods_tc_openbilling.monthCardId
-         LEFT JOIN ods_tc_openbilling_paymentmethod on ods_tc_openbilling_paymentmethod.openbillingId=ods_tc_openbilling.id;
+         LEFT JOIN ods_tc_openbilling_paymentmethod on ods_tc_openbilling_paymentmethod.openbillingId=ods_tc_openbilling.id;"
+
+$hive -e "$selectdb
+$sqlquery"

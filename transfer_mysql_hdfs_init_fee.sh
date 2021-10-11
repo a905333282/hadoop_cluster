@@ -1,11 +1,17 @@
 #! /bin/bash
-  
+
+if [ -n "$2" ] ;then
+        do_date=$2
+else
+        do_date=`date -d '-1 day' +%F`
+fi
+
 import_data(){
 /opt/module/sqoop/bin/sqoop import \
         --connect jdbc:mysql://hadoop01:3306/aili_prod_img \
         --username root \
         --password qkVChW:{8]_=L!7 \
-        --target-dir /origin_data/origin_aili_prod_img/db/$1/ \
+        --target-dir /origin_data/origin_aili_prod_img/db/$1/$do_date \
         --delete-target-dir \
         --query "$2 and  \$CONDITIONS" \
         --num-mappers 1 \
@@ -15,35 +21,35 @@ import_data(){
 }
 
 import_fee_advance(){
-	import_data fee_advance "SELECT * FROM aili_prod_img.fee_advance WHERE 1=1"
+	import_data fee_advance "SELECT * FROM aili_prod_img.fee_advance WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_billchangerecord(){
-	import_data fee_billchangerecord "SELECT * FROM aili_prod_img.fee_billchangerecord WHERE 1=1"
+	import_data fee_billchangerecord "SELECT * FROM aili_prod_img.fee_billchangerecord WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_billingreceivables(){
-	import_data fee_billingreceivables "SELECT * FROM aili_prod_img.fee_billingreceivables WHERE 1=1"
+	import_data fee_billingreceivables "SELECT * FROM aili_prod_img.fee_billingreceivables WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_cunadvance(){
-        import_data fee_cunadvance "SELECT * FROM aili_prod_img.fee_cunadvance WHERE 1=1"
+        import_data fee_cunadvance "SELECT * FROM aili_prod_img.fee_cunadvance WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_openbilling(){
-        import_data fee_openbilling "SELECT * FROM aili_prod_img.fee_openbilling WHERE 1=1"
+        import_data fee_openbilling "SELECT * FROM aili_prod_img.fee_openbilling WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_propertysubjects(){
-        import_data fee_propertysubjects "SELECT * FROM aili_prod_img.fee_propertysubjects WHERE 1=1"
+        import_data fee_propertysubjects "SELECT * FROM aili_prod_img.fee_propertysubjects WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_quadvance(){
-        import_data fee_quadvance "SELECT * FROM aili_prod_img.fee_quadvance WHERE 1=1"
+        import_data fee_quadvance "SELECT * FROM aili_prod_img.fee_quadvance WHERE DATEDIFF('$do_date',updateTime)>0"
 }
 
 import_fee_skd(){
-	import_data fee_skd "SELECT * FROM aili_prod_img.fee_skd WHERE 1=1"
+	import_data fee_skd "SELECT * FROM aili_prod_img.fee_skd WHERE DATEDIFF('$do_date',updateTime)>0"
 
 }
 

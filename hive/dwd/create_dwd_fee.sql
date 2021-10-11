@@ -1,3 +1,4 @@
+USE aili_prod_img;
 DROP TABLE IF EXISTS dwd_fee_billing;
 CREATE TABLE dwd_fee_billing (
   `id` STRING COMMENT '主键',
