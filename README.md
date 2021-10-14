@@ -1,5 +1,80 @@
 # 数据仓库搭建
+### 演示
+#### 1. 集群概况：
+![集群概况](https://user-images.githubusercontent.com/44830402/137356609-801c18e3-0e91-482d-af0c-bb539efa2ba8.png)<br>
+**集群中有的文件夹分别是**：<br>
+<br>
+1.1 **Hbase:** Hbase根目录<br>
+1.2 **Kylin:** Kylin即席查询框架目录<br>
+1.3 **spark-history:** Spark计算框架历史任务<br>
+1.4 **spark-jars:** spark计算框架程序包<br>
+1.5 **tmp:** 临时文件夹<br>
+1.6 **user:** ...<br>
+<br>
+![白纸一样的集群](https://user-images.githubusercontent.com/44830402/137356626-ebca87d7-d3dd-4517-a587-b45030dd98f1.png)<br>
+#### 2. 运行初始化脚本
+初次运行集群需要把当天之前全部的业务数据从单机mysql上传到hdfs。所以需要一个初始化脚本<br>
+脚本：<br>
+transfer_mysql_hdfs_init_fee.sh<br>
+transfer_mysql_hdfs_init_tc.sh<br>
+规则是 transfer_mysql_hdfs_init_fee.sh all 2021-10-14, 改脚本会奖指定日期之前的数据全部导入<br>
+![数据初始化fee](https://user-images.githubusercontent.com/44830402/137359192-f0f5b5c0-d073-4feb-b57e-76eaf92901ac.png)<br><br>
+初始化后（现在有两个业务物业收费和停车收费），集群中数据如图<br>
+图一：<br>
+多了一个数据暂存文件夹origin_data,里面存了刚刚转移过来的数据
+![初次转移](https://user-images.githubusercontent.com/44830402/137359557-c7443cd1-09fd-44cb-ae90-cb18f91942c5.png)<br>
+数据如图二所示，每个表在一个文件夹中, fee开头的是物业收费，tc开头的是停车收费<br>
+![初次转移1](https://user-images.githubusercontent.com/44830402/137359558-bc018238-98cc-4d47-a4fc-1e174238b810.png)<br>
+数据依据天划分，因为每天都会有新数据进来，以2021-10-14为例，内部结构如图三、四所示,part-m-00000就是数据<br>
+![初次转移2](https://user-images.githubusercontent.com/44830402/137360080-38833ebd-b536-404f-95f2-4b2d44c9af3d.png)<br>
+![初次转移3](https://user-images.githubusercontent.com/44830402/137360087-ec6ee8be-83ab-4281-96f4-64c0aeb22704.png)<br>
+3. hdfs到hive，数据虽然已经到了分布式系统，但是很难管理，hive实际上就是一个管理工具，在hdfs的上层。<br>
+首先，运行建表脚本，将ods（原始数据层）dwd（款表层）app（应用层，应为暂时业务过于简单，所以没有严格划分）三层的业务表格建起来, 脚本位置：<br>
+hive/ods/create_ods_fee.sql<br>
+hive/ods/create_ods_tc.sql<br>
+hive/dwd/create_dwd_fee.sql<br>
+hive/dwd/create_dwd_tc.sql<br>
+hive/app_layer/create_app_layer.sql<br>
+脚本是HiveSQL语言，用 hive -f 脚本名 调用。完成后，观察分布式文件系统，发现多了一个文件夹warehouse，是我们刚刚见的表的根目录
+![建表完成](https://user-images.githubusercontent.com/44830402/137361495-225b2560-121b-4d22-9129-50c73da7b7a4.png)
+这个文件夹里有三个小文件夹，对应三个层，每个文件夹里面又有对应的表
+![建表完成1](https://user-images.githubusercontent.com/44830402/137361619-fbb76aff-3147-4df3-854a-f9926e1a6f9a.png)
+以ods为例，里面有对应所有表的文件夹，但现在还是空的
+![建表完成2](https://user-images.githubusercontent.com/44830402/137362201-896ca3de-5a2f-4cd1-ac07-e6011f7d7845.png)
+在hive客户端中查看建的表
+![hive建表](https://user-images.githubusercontent.com/44830402/137363653-8b6b6d38-56f9-4caa-9e11-67adacfed7de.png)
 
+4. 从hdfs到hive加载数据
+hive相当于一个hdfs上数据管理的一个框架，所以需要把hdfs的业务元数据加载到表里，脚本包括：<br>
+hive/ods/load_ods_fee.sh<br>
+hive/ods/load_ods_tc.sh<br>
+调用方法 ./load_ods_fee.sh all 2021-10-14<br>
+此时在hdfs可视化文件系统中发现，数据已经存在了hive的路径中
+![数据装载](https://user-images.githubusercontent.com/44830402/137363416-e588bd50-2f7d-4ad4-a9c6-c12b891052cd.png)
+在hive客户端中使用sql语句已经可以看到数据。
+![hive建表1](https://user-images.githubusercontent.com/44830402/137363917-782204ff-9299-4ced-b014-65c581654794.png)
+5. 下面开始从原始数据层到宽表层
+hive/dwd/load_dwd_fee.sh<br>
+hive/dwd/load_dwd_tc.sh<br>
+调用方法 ./load_dwd_fee.sh 2021-10-14<br>这个涉及到聚合运算，集群会自动调用spark计算<br>
+计算完成后，查看数据情况，发现dwd层的表已经有了数据，
+![d2](https://user-images.githubusercontent.com/44830402/137364576-68d893cb-1a91-4a68-81cb-664b2922e231.png)
+在hive客户端中查看数据
+![q2](https://user-images.githubusercontent.com/44830402/137364681-33b5fbcc-8ec1-4802-bc57-b93b930b540e.png)
+5. dwd 到 应用层
+数据聚合完成，已经开始分析数据了
+这次主要关注了：<br>
+每栋楼总计物业费<br>
+每栋楼总计物业费分类<br>
+每个人总计物业费<br>
+每个人总计物业费分类<br>
+每个小区总计物业费<br>
+每个小区总计物业费分类<br>
+脚本：<br>
+脚本调用hive -f dwd_to_app.sh 2021-10-14<br>
+数据已经在hive中可查：<br>
+
+5. 
 **Version 2.0**：<br>
 <br>
 现集群环境：hdfs,hive,spark,hbase,kylin(即席查询)
